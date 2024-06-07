@@ -8,6 +8,7 @@ exports.overDueBooks = async (req, res) => {
         console.log("inside overdueBooks");
         const today = new Date();
         const overdueBooks = await BookBorrowed.findAll({
+        attributes: ['id', 'dueDate'],
         where: {
             book_status: 'borrowed',
             dueDate: {
@@ -29,8 +30,12 @@ exports.overDueBooks = async (req, res) => {
             }
         ]
         });
-    
-        res.json(overdueBooks);
+        
+        console.log("overdueBooks", overdueBooks);
+        if (!overdueBooks.length) {
+            res.status(201).json({data : overdueBooks, message: "No overdueBooks"});
+        }
+        res.status(201).json({data: overdueBooks, message: "book added successfully"});
     
         
     } catch (error) {

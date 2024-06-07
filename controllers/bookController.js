@@ -12,7 +12,6 @@ exports.addBook = async (req, res) => {
     }
 
     const { title, author, isbn, publicationYear, actualQuantity, currentQuantity } = req.body;
-     // Assuming req.user.id contains the admin ID
     const updatedBy = req.user.id;
     const createdBy = req.user.id; 
 
@@ -67,9 +66,9 @@ exports.deleteBook = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const book = await Book.findByPk(id);
-
-    if (!book) {
+    const book = await Book.findOne({ where: { id, is_deleted : 1 }});
+    console.log("book -------->", );
+    if (!book || book?.dataValues?.is_deleted) {
       return res.status(404).json({ error: 'Book not found' });
     }
     book.is_deleted = 1;

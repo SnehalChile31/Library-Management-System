@@ -25,12 +25,26 @@ exports.register = async (req, res) => {
 
       let user, isAdmin
       if (model == 'user') {
-        isAdmin = false
+        // checking if user is already present or not
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+          return res.status(400).send('Email already exists');
+        }
+
+        // User creation
+        isAdmin = false;
         user = await User.create({ email, password: hashedPassword });
         console.log("user?.id", user?.id); 
 
       }else if(model == 'admin'){
-        isAdmin = true
+        // checking if user is already present or not
+        const existingUser = await Admin.findOne({ where: { email } });
+        if (existingUser) {
+          return res.status(400).send('Email already exists');
+        }
+
+        // Admin creation
+        isAdmin = true;
         user = await Admin.create({ email, password: hashedPassword });
         console.log("user?.id", user?.id); 
       }
